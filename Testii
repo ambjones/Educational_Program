@@ -1,9 +1,9 @@
+#Amber Jones and Yveslauris Laurissiant
 #include <iostream>
 #include <string>
 using namespace std;
 
-
-//defines the structure for flashcards and stores information
+//defines the struct for flashcards and stores information
 struct Flashcard{
    string question;
    string answer;
