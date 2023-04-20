@@ -1,0 +1,130 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+
+//defines the structure for flashcards and stores information
+struct Flashcard{
+   string question;
+   string answer;
+};
+string studySet() {
+   string option;
+       string setName;
+       cout << "Please enter a name for your Study Set: " << endl;
+       getline(cin, setName);
+       int termNum, i, k, order = 1;
+       cout << "Enter how many terms you would like to add: \n";
+       cin >> termNum; // termNum = number of terms
+       int *ptr = &termNum;
+       string arr[*ptr][2]; // initialization of array, only 2 columns for name then definition
+       for (i = 0; i < *ptr ; i++) { // for loop to enter definition and name
+           cout << "Enter the name for your term: " << endl;
+           if (i == 0) {
+               cin.ignore(); // used to erase newline character after input occurs so get line is not affected
+           }
+           getline(cin, arr[i][0]); // get line as the name hints grabs entire line/sentence inputted
+           cout << "Enter the definition: " << endl;
+           getline(cin, arr[i][1]);
+       }
+       cout << "The study set, '" << setName << "' has been created." << endl;
+       for (k = 0; k < *ptr; k++) {
+           cout << "The name of term #" << order << " is: " << arr[k][0] << ".\n";
+           cout << "The definition: " << arr[k][1] << ".\n" << "\n";
+           order++; // updates the variable that states order of terms
+       }
+   }
+
+//function to create flashcards
+void addFlashcard(Flashcard*flashcards, int&cardCount){
+   if (cardCount == 100){ //checks if max # of cards has been reached
+       cout << "You've reached the maximum amount of flashcards allowed.\n"; //error message
+       return;
+   }
+
+   cout << "\nEnter in question " << cardCount + 1 << ": ";
+   getline(std::cin, flashcards[cardCount].question);
+
+   cout << "Enter in answer for question " << cardCount + 1 << ": ";
+   getline(std::cin, flashcards[cardCount].answer);
+   cardCount++;
+}
+
+//function for testing flashcards
+void takeTest(Flashcard*flashcards, int cardCount) {
+   if (cardCount == 0) { //if no flashcards are available, error message displays
+       cout << "\nThere are no flashcards available to be tested on.\n"; //error message
+       return;
+   }
+
+//start of test
+   cout << "\nBeginning the test.\n";
+   int score = 0;
+
+   for (int i = 0; i < cardCount; i++) {
+       cout << "Question " << i + 1 << ": " << flashcards[i].question << endl;
+       string userAnswer;
+       getline(cin, userAnswer);
+
+       if (userAnswer == flashcards[i].answer) {
+           cout << "Correct!\n";
+           score++;
+       } else {
+           cout << "Incorrect. The answer is:" << flashcards[i].answer << endl;
+       }
+   }
+//keeping score from test
+   cout << "You scored " << score << " out of " << cardCount << ".\n";
+}
+int main(){
+   Flashcard flashcards[10];
+   int cardCount = 0;
+   char choice;
+   string folderName, option;
+
+
+   do {
+       //https://ascii-generator.site/t/
+       cout << R"(
+.-.  .-. .----. .-.    .----.  .---.  .-.  .-. .----.   .-----.  .---.    .-----. .----.  .----. .-----. .-. .-.
+| {  } | } |__} } |    | }`-' / {-. \ }  \/  { } |__}   `-' '-' / {-. \   `-' '-' } |__} { {__-` `-' '-' { | { |
+{  /\  } } '__} } '--. | },-. \ '-} / | {  } | } '__}     } {   \ '-} /     } {   } '__} .-._} }   } {   | } | }
+`-'  `-' `----' `----' `----'  `---'  `-'  `-' `----'     `-'    `---'      `-'   `----' `----'    `-'   `-' `-')" << endl;
+       cout << "\n1. Create Flashcards";
+       cout << "\n2. Test Flashcards";
+       cout << "\n3. Create a folder";
+       cout << "\n4. Exit the program";
+       cout << "\nPLease enter in your choice from the list above: \n";
+       cin >> choice;
+       cin.ignore();
+
+       switch (choice) {
+           case '1':
+               addFlashcard(flashcards, cardCount);
+               break;
+           case '2':
+               takeTest(flashcards, cardCount);
+               break;
+           case '3':
+               cout << "\nYou've chose to create a folder.\n" << "Enter a name for it:  "<< endl;
+               getline(cin,folderName);
+               cout << folderName << " has been created, however it is currently empty and "
+                                     "a study set must be added.\n";
+               studySet();
+               do{
+                   studySet();
+                   cout << "Would you like to create another study set, Yes or No?: "<< endl;
+                   cin >> option;
+               }while(option == "yes" || option == "Yes");
+               cout << "Goodbye!";
+               break;
+           case '4':
+               cout << "\nExiting the program.\n";
+               break;
+           default:
+               cout << "Invalid choice. Please try again.\n";
+               break;
+       }
+   } while (choice != '4');//loop executes unless user enters in 4
+   return 0;
+}
